@@ -1,0 +1,9 @@
+{
+    "java.project.referencedLibraries": [
+        "c:\\Users\\igorl\\OneDrive\\Desktop\\Portifolio\\faculdade_aleatorios\\analiseForense\\lib\\analise-forense-aed.jar"
+    ],
+    "java.project.sourcePaths": [
+        ".",
+        "src"
+    ]
+}
