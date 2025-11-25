@@ -23,9 +23,9 @@ public class TesteValidacao {
         }
 
         // ========== TESTE DESAFIO 1 ==========
-        System.out.println("📋 DESAFIO 1: Sessões Inválidas");
+        System.out.println("📋 DESAFIO 1: Sessões Inválidas - Com csv de 1000_linhas");
         System.out.println("===============================");
-        Set<String> invalidas = impl.encontrarSessoesInvalidas("test_sessoes_invalidas.csv");
+        Set<String> invalidas = impl.encontrarSessoesInvalidas("desafio1_1005_linhas.csv");
         System.out.println("✅ Encontradas: " + invalidas.size() + " sessões inválidas");
         System.out.println("Sessões: " + invalidas);
         

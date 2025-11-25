@@ -92,7 +92,6 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
     @Override
     public List<Alerta> priorizarAlertas(String caminhoArquivo, int n) 
             throws IOException {
-        // TODO: Implementar Desafio 3
         return new ArrayList<>();
     }
         
