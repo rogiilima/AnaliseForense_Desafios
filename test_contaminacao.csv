@@ -1,0 +1,12 @@
+TIMESTAMP,USER_ID,SESSION_ID,ACTION_TYPE,TARGET_RESOURCE,SEVERITY_LEVEL,BYTES_TRANSFERRED
+1697396401,alice,session-alpha,LOGIN,/usr/bin/sshd,5,0
+1697396415,alice,session-alpha,COMMAND_EXEC,/bin/ls,3,1024
+1697396428,alice,session-alpha,FILE_ACCESS,/var/log/auth.log,7,4096
+1697396445,alice,session-alpha,FILE_ACCESS,/etc/shadow,10,2048
+1697396458,bob,session-beta,LOGIN,/usr/bin/telnetd,9,0
+1697396472,bob,session-beta,FILE_ACCESS,/home/bob/docs.txt,4,8192
+1697396485,eve,session-gamma,LOGIN,/var/log/auth.log,5,0
+1697396501,eve,session-gamma,FILE_ACCESS,/etc/passwd,10,1024
+1697396515,eve,session-gamma,DATA_TRANSFER,192.0.2.10,8,768000
+1697396528,carlos,session-delta,LOGIN,/bin/ls,3,512
+1697396542,carlos,session-delta,FILE_ACCESS,/tmp/cache,6,256

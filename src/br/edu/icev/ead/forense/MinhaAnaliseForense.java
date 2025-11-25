@@ -159,7 +159,117 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
     public Optional<List<String>> rastrearContaminacao(
             String caminhoArquivo, String recursoInicial, String recursoAlvo) 
             throws IOException {
-        // TODO: Implementar Desafio 5
+        //Construcao do grafo
+        Map<String, List<String>> grafo = construirGrafo(caminhoArquivo);
+        
+        //Se a origem for igual ao destino
+        if (recursoInicial.equals(recursoAlvo)) {
+            if (grafo.containsKey(recursoInicial)) {
+                return Optional.of(Collections.singletonList(recursoInicial));
+            } else {
+                return Optional.empty();
+            }
+        }
+        
+        //retorna o caminho
+        return bfs(grafo, recursoInicial, recursoAlvo);
+    }
+
+    private Map<String, List<String>> construirGrafo(String caminhoArquivo) throws IOException {
+        Map<String, List<String>> grafo = new HashMap<>();
+        
+        // Agrupa eventos por sessão (como o invasor percorreu o grafo naquela sessão)
+        Map<String, List<String>> eventosPorSessao = new HashMap<>();
+        
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader(caminhoArquivo), 65536)) {
+            
+            reader.readLine(); // pula header
+            
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] campos = linha.split(",", 7);
+                
+                if (campos.length < 5) continue;// Isso aqui serve para verificar se o csv tem menos campos do que o que eu vou precisa
+                
+                String sessionId = campos[2];
+                String targetResource = campos[4];
+                
+                // Adicionar recurso à lista da sessão
+                eventosPorSessao.computeIfAbsent(sessionId, k -> new ArrayList<>()).add(targetResource);
+            }
+        }
+        
+        // Algoritmo para construir as arestas
+        for (List<String> recursos : eventosPorSessao.values()) {
+            for (int i = 0; i < recursos.size() - 1; i++) {
+                String origem = recursos.get(i);
+                String destino = recursos.get(i + 1);
+                
+                // Adicionar aresta ao grafo
+                grafo.computeIfAbsent(origem, k -> new ArrayList<>()).add(destino);
+            }
+        }
+        
+        return grafo;
+    }
+
+    private Optional<List<String>> bfs(Map<String, List<String>> grafo, String inicio, String alvo) {
+        
+        // Verificar se início existe no grafo
+        if (!grafo.containsKey(inicio)) {
+            return Optional.empty();
+        }
+        
+        // Fila do BFS
+        Queue<String> fila = new LinkedList<>();
+        fila.offer(inicio);
+        
+        // Conjunto de visitados
+        Set<String> visitados = new HashSet<>();
+        visitados.add(inicio);
+        
+        // Mapa dos pais (para reconstruir o caminho)
+        Map<String, String> pai = new HashMap<>();
+        pai.put(inicio, null);
+        
+        // BFS
+        while (!fila.isEmpty()) {
+            String atual = fila.poll();
+            
+            // Verifica se é o alvo
+            if (atual.equals(alvo)) {
+                return Optional.of(reconstruirCaminho(pai, inicio, alvo));
+            }
+            
+            // Explorar vizinhos
+            List<String> vizinhos = grafo.getOrDefault(atual, Collections.emptyList());
+            for (String vizinho : vizinhos) {
+                if (!visitados.contains(vizinho)) {
+                    visitados.add(vizinho);
+                    pai.put(vizinho, atual);
+                    fila.offer(vizinho);
+                }
+            }
+        }
+        
+        // Quando não encontra caminho
         return Optional.empty();
+    }
+
+    private List<String> reconstruirCaminho(Map<String, String> predecessor, String inicio, String alvo) {
+        List<String> caminho = new ArrayList<>();
+        String atual = alvo;
+        
+        // Reconstroe caminho de trás para frente
+        while (atual != null) {
+            caminho.add(atual);
+            atual = predecessor.get(atual);
+        }
+        
+        // Inverte para ter início → alvo
+        Collections.reverse(caminho);
+        
+        return caminho;
     }
 }
