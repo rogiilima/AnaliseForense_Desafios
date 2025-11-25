@@ -91,8 +91,61 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
     
     @Override
     public List<Alerta> priorizarAlertas(String caminhoArquivo, int n) 
-            throws IOException {
-        return new ArrayList<>();
+            throws IOException {//caso o numero de alertas for 0
+        if (n <= 0) {
+            return new ArrayList<>();
+        }
+
+        PriorityQueue<Alerta> alertasPrioridades = new PriorityQueue<>(
+                (a, b) -> Integer.compare(b.getSeverityLevel(), a.getSeverityLevel())); // Compara em ordem DECRESCENTE
+
+        //O leitor do csv aqui é implementado da mesma lógica que no encontrarSessoesInvalidas( eu só apaguei os comentarios)
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader(caminhoArquivo), 65536)) {
+
+            reader.readLine();
+
+            String linha;
+            while ((linha = reader.readLine()) != null) {
+                String[] campos = linha.split(",", 7);
+
+                long timestamp = Long.parseLong(campos[0]);
+                String userId = campos[1];
+                String sessionId = campos[2];
+                String actionType = campos[3];
+                String targetResource = campos[4];
+                int severityLevel = Integer.parseInt(campos[5]);
+
+                // Lógica Principal
+                //Essa parte pega o BYTES_TRANSFERRED
+                long bytesTransferred = 0;
+                if (campos.length > 6 && !campos[6].isEmpty()) {
+                    try {
+                        bytesTransferred = Long.parseLong(campos[6]);
+                    } catch (NumberFormatException e) {
+                        // Ignora se não for número válido
+                        bytesTransferred = 0;
+                    }
+                }
+                // Criar e adicionar alerta
+                Alerta alerta = new Alerta(
+                        timestamp, userId, sessionId, actionType,
+                        targetResource, severityLevel, bytesTransferred
+                );
+
+                alertasPrioridades.offer(alerta);
+
+
+            }
+        }
+
+        // Extrair os N alertas mais críticos
+        List<Alerta> topAlertas = new ArrayList<>();
+        for (int i = 0; i < n && !alertasPrioridades.isEmpty(); i++) {
+            topAlertas.add(alertasPrioridades.poll());
+        }
+
+        return topAlertas;
     }
         
     @Override
