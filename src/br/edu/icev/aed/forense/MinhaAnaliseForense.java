@@ -1,10 +1,7 @@
-package br.edu.icev.ead.forense;
-import br.edu.icev.aed.forense.AnaliseForenseAvancada;
-import br.edu.icev.aed.forense.Alerta;
+package br.edu.icev.aed.forense;
 
 import java.util.*;
 import java.io.*;
-
 
 public class MinhaAnaliseForense implements AnaliseForenseAvancada {
     public MinhaAnaliseForense() {
