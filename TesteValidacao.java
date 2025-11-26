@@ -1,12 +1,11 @@
 // Crie um projeto separado para testar se seu JAR funciona
 // 1. Adicione seu JAR como dependência
 // 2. Teste se consegue importar e usar sua classe:
+import br.edu.icev.aed.forense.MinhaAnaliseForense;
 import br.edu.icev.aed.forense.AnaliseForenseAvancada;
-import br.edu.icev.ead.forense.MinhaAnaliseForense;
 import br.edu.icev.aed.forense.Alerta;
 
-import java.util.List;
-import java.util.Set;
+
 
 import java.util.*;
 
@@ -41,7 +40,7 @@ public class TesteValidacao {
         System.out.println("│  📋 DESAFIO 1: Encontrar Sessões Inválidas (Pilha)     │");
         System.out.println("└─────────────────────────────────────────────────────────┘");
         
-        Set<String> invalidas = impl.encontrarSessoesInvalidas("test_sessoes_invalidas.csv");
+        Set<String> invalidas = impl.encontrarSessoesInvalidas("test_sessoes_invalida.csv");
         
         System.out.println("✅ Teste executado com sucesso!");
         System.out.println("   Sessões inválidas encontradas: " + invalidas.size());

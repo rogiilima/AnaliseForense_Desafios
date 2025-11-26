@@ -8,7 +8,7 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
     }
     
     @Override
-    public Set<String> encontrarSessoesInvalidas(String caminhoArquivo) throws IOException {
+    public Set<String> encontrarSessoesInvalidas(String caminhoArquivo) throws IOException {// quem chama o metodo tem que tratar o IO
         Map<String, Deque<String>> mapDeLoginUsuarios = new HashMap<>();
         Set<String> sessoesInvalidas = new HashSet<>();
         
@@ -21,6 +21,10 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
             while ((linha = reader.readLine()) != null) {
                 String[] campos = linha.split(",", 7); // esse 7 serve também para otimizar a leitura, visto que ele vai criar um vetor so com 7 posições
                 
+                if (campos.length < 4) {
+                    continue; // evita IndexOutOfBoundsException
+                }
+
                 String userId = campos[1];
                 String sessionId = campos[2];
                 String action = campos[3];
@@ -72,6 +76,10 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] campos = linha.split(",", 7);
+
+                if (campos.length < 4) {
+                    continue; // evita IndexOutOfBoundsException
+                }
                 
                 String sId = campos[2]; // sessionsId    
                 String action = campos[3];   
@@ -106,13 +114,19 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
             while ((linha = reader.readLine()) != null) {
                 String[] campos = linha.split(",", 7);
 
-                long timestamp = Long.parseLong(campos[0]);
                 String userId = campos[1];
                 String sessionId = campos[2];
                 String actionType = campos[3];
                 String targetResource = campos[4];
-                int severityLevel = Integer.parseInt(campos[5]);
+                long timestamp;
+                int severityLevel;
 
+                try {
+                   timestamp = Long.parseLong(campos[0]);
+                   severityLevel = Integer.parseInt(campos[5]);
+                } catch (NumberFormatException e) {
+                    continue; // linha inválida , pula
+                }
                 // Lógica Principal
                 //Essa parte pega o BYTES_TRANSFERRED
                 long bytesTransferred = 0;
@@ -163,6 +177,11 @@ public class MinhaAnaliseForense implements AnaliseForenseAvancada {
                 }
 
                 String[] partes = linha.split(",");
+
+                // Garante que há dados suficientes
+                if (partes.length < 7) {
+                    continue; // evita IndexOutOfBoundsException
+                }
 
                 if (partes.length >= 2) {
                     try {
