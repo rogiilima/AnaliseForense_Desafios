@@ -40,7 +40,7 @@ public class TesteValidacao {
         System.out.println("│  📋 DESAFIO 1: Encontrar Sessões Inválidas (Pilha)     │");
         System.out.println("└─────────────────────────────────────────────────────────┘");
         
-        Set<String> invalidas = impl.encontrarSessoesInvalidas("test_sessoes_invalida.csv");
+        Set<String> invalidas = impl.encontrarSessoesInvalidas("arquivo_logs.csv");
         
         System.out.println("✅ Teste executado com sucesso!");
         System.out.println("   Sessões inválidas encontradas: " + invalidas.size());
@@ -61,14 +61,14 @@ public class TesteValidacao {
         System.out.println("└─────────────────────────────────────────────────────────┘");
         
         // Teste 1: Sessão existente
-        System.out.println("🔍 Teste 2.1: session-alpha-723");
-        List<String> timeline1 = impl.reconstruirLinhaTempo("teste_timeline.csv", "session-alpha-723");
+        System.out.println("🔍 Teste 2.1: session-c-28");
+        List<String> timeline1 = impl.reconstruirLinhaTempo("arquivo_logs.csv", "session-c-28");
         System.out.println("   ✅ Ações encontradas: " + timeline1.size());
         System.out.println("   Timeline: " + timeline1);
         
         // Teste 2: Sessão inexistente
         System.out.println("\n🔍 Teste 2.2: sessão inexistente");
-        List<String> timeline2 = impl.reconstruirLinhaTempo("teste_timeline.csv", "session-nao-existe");
+        List<String> timeline2 = impl.reconstruirLinhaTempo("arquivo_logs.csv", "session-nao-existe");
         System.out.println("   ✅ Ações encontradas: " + timeline2.size());
         
         if (timeline2.isEmpty()) {
@@ -88,7 +88,7 @@ public class TesteValidacao {
         
         // Teste 1: Top 5 alertas
         System.out.println("🔍 Teste 3.1: Top 5 Alertas Mais Críticos");
-        List<Alerta> top5 = impl.priorizarAlertas("test_alertas.csv", 5);
+        List<Alerta> top5 = impl.priorizarAlertas("arquivo_logs.csv", 5);
         System.out.println("   ✅ Alertas retornados: " + top5.size());
         
         for (int i = 0; i < Math.min(5, top5.size()); i++) {
@@ -118,7 +118,7 @@ public class TesteValidacao {
         
         // Teste 2: N = 0
         System.out.println("\n🔍 Teste 3.2: N = 0");
-        List<Alerta> top0 = impl.priorizarAlertas("test_alertas.csv", 0);
+        List<Alerta> top0 = impl.priorizarAlertas("arquivo_logs.csv", 0);
         System.out.println("   ✅ Alertas retornados: " + top0.size());
         
         if (top0.isEmpty()) {
@@ -136,7 +136,7 @@ public class TesteValidacao {
         System.out.println("│  📋 DESAFIO 4: Picos de Transferência (Stack-NGE)      │");
         System.out.println("└─────────────────────────────────────────────────────────┘");
         
-        Map<Long, Long> picos = impl.encontrarPicosTransferencia("teste_picos.csv");
+        Map<Long, Long> picos = impl.encontrarPicosTransferencia("arquivo_logs.csv");
         
         System.out.println("✅ Teste executado com sucesso!");
         System.out.println("   Picos encontrados: " + picos.size());
@@ -189,9 +189,9 @@ public class TesteValidacao {
         }
         
         // Teste 2: Caminho através de intermediário
-        System.out.println("\n🔍 Teste 5.2: /usr/bin/sshd → 192.168.1.100");
+        System.out.println("\n🔍 Teste 5.2: /usr/bin/sshd → 192.0.2.10");
         Optional<List<String>> path2 = impl.rastrearContaminacao(
-            "test_contaminacao.csv", "/usr/bin/sshd", "192.168.1.100"
+            "test_contaminacao.csv", "/usr/bin/sshd", "192.0.2.10"
         );
         
         if (path2.isPresent()) {
